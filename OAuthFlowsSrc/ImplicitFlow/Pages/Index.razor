@@ -1,0 +1,30 @@
+﻿@page "/"
+@inject IConfiguration Configuration
+
+<div class="card">
+    <div class="card-header">
+        Obtener el token de acceso
+    </div>
+    <div class="card-body">
+        <a class="btn btn-primary" 
+           href="@Url">Ir al servidor de autorización</a>
+    </div>
+</div>
+@code{
+    string Url = string.Empty;
+    protected override void OnInitialized()
+    {
+        const string Response_type = "token";
+        const string State = "ThisIsMyStateValue";
+        string Redirect_Uri = Configuration["OAuth:Redirect_Uri"];
+        string Scope = Configuration["OAuth:Scope"];
+        string Authorization_Endpoint = Configuration["OAuth:Authorization_Endpoint"];
+        string Client_Id = Configuration["OAuth:Client_Id"];
+        Url = $"{Authorization_Endpoint}?"+
+            $"response_type={Response_type}&"+
+            $"client_id={Client_Id}&"+
+            $"redirect_uri={Redirect_Uri}&"+
+            $"scope={Scope}&"+
+            $"state={State}";
+    }
+}

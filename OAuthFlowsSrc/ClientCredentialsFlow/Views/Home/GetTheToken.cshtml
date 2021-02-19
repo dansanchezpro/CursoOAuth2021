@@ -1,0 +1,26 @@
+﻿@model (string Status, string Content, bool IsSuccess) 
+
+    <div class="card">
+        <div class="card-header">
+            El Token de Acceso
+        </div>
+        <div class="card-body">
+            <form action="/call/the/api" method="post">
+                <input type="hidden" name="Token"
+                       value="@Model.Content" />
+                <p>
+                    Estatus
+                </p>
+                <p class="response-content">@Model.Status</p>
+                <p class="response-content">@Model.Content</p>
+                @if (Model.IsSuccess)
+                {
+                    <p>
+                        <button class="btn btn-primary">Invocar la API</button>
+                    </p>
+                }
+            </form>
+
+        </div>
+
+    </div>

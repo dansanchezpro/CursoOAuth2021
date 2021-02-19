@@ -1,0 +1,48 @@
+﻿@page "/give/me/the/access/token"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            El Token de Acceso
+        </div>
+        <div class="card-body">
+            <p> Este es el Token de Acceso</p>
+            <div class="response-content">
+                @Token
+            </div>
+            <p>Ahora puedes invocar a la API</p>
+            <p>
+                <button class="btn btn-primary" @onclick="CallTheApi">
+                    Invocar a la API
+                </button>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    string Token;
+    protected async override Task OnInitializedAsync()
+    {
+        string QueryString =
+        NavigationManager.Uri.Substring(
+            NavigationManager.Uri.IndexOf('#') + 1);
+
+        Token = System.Web.HttpUtility.ParseQueryString(QueryString)["access_token"];
+        Token = System.Net.WebUtility.UrlDecode(Token);
+
+        var ExpiresIn = DateTime.Now;
+        var ExpiresIn_Seconds = System.Web.HttpUtility.ParseQueryString(QueryString)["expires_In"];
+        ExpiresIn = ExpiresIn.AddSeconds(double.Parse(ExpiresIn_Seconds));
+
+        await JSRuntime.InvokeVoidAsync(
+            "sessionStorage.setItem", "expiresIn", ExpiresIn);
+    }
+    void CallTheApi()
+    {
+        string EncodedToken = System.Net.WebUtility.UrlEncode(Token);
+        NavigationManager.NavigateTo($"/call/the/api/{EncodedToken}");
+    }
+}
