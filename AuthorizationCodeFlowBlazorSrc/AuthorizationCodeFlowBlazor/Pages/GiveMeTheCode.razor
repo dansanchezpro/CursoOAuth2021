@@ -1,0 +1,20 @@
+﻿@page "/give/me/the/code"
+
+<h3>Paso 2: Recuperar el código de la URL</h3>
+
+<div class="card">
+    <div class="card-header">
+        Código de autorización otorgado
+    </div>
+    <div class="card-body">
+        <p>Este es el código de autorización:</p>
+        <p class="response-content">@Code</p>
+        <p>Este es el valor de State:</p>
+        <p class="response-content">@State</p>
+        <p>Ahora podemos intercambiarlo por un Access Token</p>
+        <p class="text-center"></p>
+        <a class="btn btn-primary" href="/exchange/the/code/for/a/token?code=@Code">
+            Intercambiar el código por un Access Token
+        </a>
+    </div>
+</div>
