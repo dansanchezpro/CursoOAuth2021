@@ -1,0 +1,26 @@
+﻿@model (string Code, string State, string ID_Token)
+@{ 
+    ViewData["Title"] = "Give me The code";
+}
+<h3>Paso 2: Recuperar el código de la URL</h3>
+<div class="card">
+    <div class="card-header">
+        Código de autorización otorgado
+    </div>
+    <div class="card-body">
+        <p>Este es el código de autorización</p>
+        <p class="response-content">@Model.Code</p>
+
+        <p>Este es el Token de Identidad</p>
+        <p class="response-content">@Model.ID_Token</p>
+
+        <p>Este es el valor de State que es devuelto por el servidor de autorización</p>
+        <p class="response-content">@Model.State</p>
+        <p>Ahora podemos intercambiarlo por un access token</p>
+        <p>
+            <a class="btn btn-primary" href="/exchange/the/code/for/a/token?code=@Model.Code&state=@Model.State">
+                Intercambiar el código por un Access Token
+            </a>
+        </p>
+    </div>
+</div>
