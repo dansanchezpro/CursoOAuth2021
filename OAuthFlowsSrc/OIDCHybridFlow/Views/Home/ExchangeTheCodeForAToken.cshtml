@@ -20,5 +20,16 @@
                     </p>
                 }
             </form>
+            @if (Model.IsSuccess)
+            {
+        <form action="/call/the/userinfo" method="post">
+            <input type="hidden" name="token" value="@Model.Content" />
+            <p>
+                <button class="btn btn-primary">
+                    Invocar a la API User Info
+                </button>
+            </p>
+        </form>
+            }
         </div>
     </div>

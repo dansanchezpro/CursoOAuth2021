@@ -1,0 +1,45 @@
+﻿@page "/call/the/userinfo/{token}"
+@inject IConfiguration Configuration
+
+<p>Este es el resultado de la llamada a UserInfo</p>
+<div class="card">
+    <div class="card-header">
+        Respuesta de UserInfo
+    </div>
+    <div class="card-body">
+        <p class="response-content">@UserInfoResponse</p>
+    </div>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public string Token { get; set; }
+    string UserInfoResponse;
+
+    protected async override Task OnInitializedAsync()
+    {
+        string OIDCConfiguration_Endpoint = Configuration["OAuth:OIDCConfiguration_Endpoint"];
+
+        var HttpClient = new HttpClient();
+
+        var DiscoveryDocument = await HttpClient.GetFromJsonAsync<JsonElement>(OIDCConfiguration_Endpoint);
+
+        var UserInfo_Endpoint = DiscoveryDocument.GetProperty("userinfo_endpoint").GetString();
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+        var Response = await HttpClient.GetAsync(UserInfo_Endpoint);
+        if (Response.IsSuccessStatusCode)
+        {
+            var JsonElement = await Response.Content.ReadFromJsonAsync<JsonElement>();
+            UserInfoResponse = JsonSerializer.Serialize(JsonElement, new JsonSerializerOptions { WriteIndented = true });
+        }
+        else
+        {
+            UserInfoResponse = $"{(int)Response.StatusCode} {Response.ReasonPhrase}";
+        }
+    }
+
+}

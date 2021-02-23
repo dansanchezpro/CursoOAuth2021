@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -30,6 +31,7 @@ namespace CodeFlow.Controllers
         {
             const string State = "ThisIsMyStateValue";
             const string Response_Mode = "form_post";
+
             string Authorization_Endpoint = Configuration["OAuth:Authorization_Endpoint"];
             string Response_Type = "code id_token";
             string Client_Id = Configuration["OAuth:Client_Id"];
@@ -47,7 +49,6 @@ namespace CodeFlow.Controllers
                 $"code_challenge_method={CodeFlowWithPKCE.Helpers.PKCEHelper.Code_Challenge_Method}&" +
                 $"nonce={Nonce}&" +
                 $"response_mode={Response_Mode}";
-
             return Redirect(URL);
         }
 
@@ -81,7 +82,7 @@ namespace CodeFlow.Controllers
                     { "client_id", Client_Id},
                     { "client_secret", Client_Secret},
                     { "scope", Scope},
-                    { "code_verifier", CodeFlowWithPKCE.Helpers.PKCEHelper.Code_Verifier}
+                    { "code_verifier", CodeFlowWithPKCE.Helpers.PKCEHelper.Code_Verifier }
                 };
             var HttpClient = new HttpClient();
             var Body = new FormUrlEncodedContent(BodyData);
@@ -123,7 +124,34 @@ namespace CodeFlow.Controllers
             return View("CallTheApi", Model);
         }
 
+        [HttpPost("/call/the/userinfo")]
+        public async Task<IActionResult> CallTheUserInfo(string token)
+        {
+            var AccessToken = JObject.Parse(token)["access_token"].Value<string>();
+            string OIDCConfiguration_Endpoint = Configuration["OAuth:OIDCConfiguration_Endpoint"];
+            var HttpClient = new HttpClient();
 
+            var DiscoveryDocument = await HttpClient.GetFromJsonAsync<JsonElement>(OIDCConfiguration_Endpoint);
+            var UserInfo_Endpoint = DiscoveryDocument.GetProperty("userinfo_endpoint").GetString();
+
+            HttpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AccessToken);
+            var Response = await HttpClient.GetAsync(UserInfo_Endpoint);
+
+            (string Status, string Content) Model;
+            Model.Status = $"{(int)Response.StatusCode} {Response.ReasonPhrase}";
+            if (Response.IsSuccessStatusCode)
+            {
+                string ResponseContent = await Response.Content.ReadAsStringAsync();
+                var JsonElement = JsonSerializer.Deserialize<JsonElement>(ResponseContent);
+                Model.Content = JsonSerializer.Serialize(JsonElement, new JsonSerializerOptions { WriteIndented = true });
+            }
+            else
+            {
+                Model.Content = await Response.Content.ReadAsStringAsync();
+            }
+            return View("CallTheApi", Model);
+        }
 
         public IActionResult Index()
         {

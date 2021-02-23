@@ -1,0 +1,86 @@
+﻿@inject IJSRuntime JSRuntime
+@using System.Threading
+@implements IDisposable
+@inject IConfiguration Configuration
+
+<div class="silent-refresh">
+    <p>
+        El Token expirará en @Hours horas @Minutes minutos @Seconds segundos
+    </p>
+    <p>
+        <button class="btn btn-primary"
+                @onclick="DoSilentRefresh">
+            Silent Refresh
+        </button>
+    </p>
+</div>
+@if (ShowIFrame)
+{
+    <iframe src="@UrlSilentRefresh"
+            style="display:none"></iframe>
+}
+
+
+@code {
+    bool ShowIFrame = false;
+    string UrlSilentRefresh;
+    int Hours = 0;
+    int Minutes = 0;
+    int Seconds = 0;
+
+    CancellationTokenSource PollingCancellationToken;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            UpdateExpirationTime();
+        }
+    }
+
+
+    void DoSilentRefresh()
+    {
+        const string Response_type = "token";
+        const string State = "ThisIsMyStateValue";
+
+        const string Prompt = "none";
+
+        string Refresh_Token_Redirect_Uri = Configuration["OAuth:Refresh_Token_Redirect_Uri"];
+        string Scope = Configuration["OAuth:Scope"];
+        string Authorization_Endpoint = Configuration["OAuth:Authorization_Endpoint"];
+        string Client_Id = Configuration["OAuth:Client_Id"];
+        UrlSilentRefresh = $"{Authorization_Endpoint}?" +
+            $"response_type={Response_type}&" +
+            $"client_id={Client_Id}&" +
+            $"redirect_uri={Refresh_Token_Redirect_Uri}&" +
+            $"scope={Scope}&" +
+            $"state={State}&" +
+            $"prompt={Prompt}";
+
+        PollingCancellationToken.Cancel();
+        ShowIFrame = true;
+        StateHasChanged();
+
+    }
+
+    void IDisposable.Dispose()
+    {
+        PollingCancellationToken?.Cancel();
+    }
+    async void UpdateExpirationTime()
+    {
+        DateTime ExpiresIn = await JSRuntime.InvokeAsync<DateTime>(
+            "sessionStorage.getItem", "expiresIn");
+        PollingCancellationToken = new CancellationTokenSource();
+        while (!PollingCancellationToken.IsCancellationRequested)
+        {
+            var Expires = ExpiresIn - DateTime.Now;
+            Hours = Expires.Hours;
+            Minutes = Expires.Minutes;
+            Seconds = Expires.Seconds;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+    }
+}

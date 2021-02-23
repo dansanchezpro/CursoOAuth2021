@@ -1,0 +1,41 @@
+﻿@page "/call/the/api/{Token}"
+@inject IConfiguration Configuration;
+@inject HttpClient HttpClient;
+
+<p>Este es el resultado de la llamada a la API</p>
+<div class="card">
+    <div class="card-header">
+        Respuesta de la API
+    </div>
+    <div class="card-body">
+        <div class="text-right">
+            <SilentRefresh></SilentRefresh>
+        </div>
+        <p class="response-content">@APIResponse</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Token { get; set; }
+
+    string APIResponse;
+
+    protected async override Task OnInitializedAsync()
+    {
+        string Api_Endpoint = Configuration["OAuth:Api_Endpoint"];
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+        var Response = await HttpClient.GetAsync(Api_Endpoint);
+        if (Response.IsSuccessStatusCode)
+        {
+            var JsonElement = await Response.Content.ReadFromJsonAsync<JsonElement>();
+            APIResponse = JsonSerializer.Serialize(JsonElement, new JsonSerializerOptions { WriteIndented = true });
+        }
+        else
+        {
+            APIResponse = $"{(int)Response.StatusCode} {Response.ReasonPhrase}";
+        }
+    }
+}
