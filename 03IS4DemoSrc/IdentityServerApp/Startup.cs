@@ -20,9 +20,12 @@ namespace IdentityServerApp
                 .AddInMemoryApiScopes(Identity.Config.ApiScopes)
                 .AddInMemoryApiResources(Identity.Config.ApiResources)
                 .AddInMemoryClients(Identity.Config.Clients)
-                .AddTestUsers(Models.Repository.Users);
+                .AddTestUsers(Models.Repository.Users)
+                .AddInMemoryIdentityResources(Identity.Config.IdentityResources);
 
             Builder.AddDeveloperSigningCredential();
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,15 +36,17 @@ namespace IdentityServerApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseRouting();
+
             app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("<a href='.well-known/openid-configuration'>Discovery document</a>");
-                });
+                endpoints.MapControllerRoute(
+                    name:"default",
+                    pattern:"{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
