@@ -171,6 +171,7 @@ namespace IdentityServerApp.Controllers
 
         private TestUser AutoProvisionUser(string provider, string providerUserId, IEnumerable<Claim> claims)
         {
+            //SC si biene de una red social y no existe en la lista de usuarios lo agrega, aqui podriamos redireccionar a la pagina de registro
             var user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
             return user;
         }

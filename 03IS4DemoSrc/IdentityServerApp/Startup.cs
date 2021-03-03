@@ -1,3 +1,6 @@
+using IdentityServer4;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +29,21 @@ namespace IdentityServerApp
             Builder.AddDeveloperSigningCredential();
 
             services.AddControllersWithViews();
+
+            services.AddAuthentication()
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options => 
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = "893340720053-mu3fihlubgpi5ad6fdbih2dtu2sbfaom.apps.googleusercontent.com";
+                    options.ClientSecret = "C4yE0tvK3QsAzLHm0P9mihs2";
+                })
+                .AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = "2855936137964511";
+                    options.ClientSecret = "51bd55c31174fd36818e85c1de936cb5";
+                })
+                ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

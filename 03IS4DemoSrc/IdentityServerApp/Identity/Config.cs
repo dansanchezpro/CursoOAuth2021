@@ -22,7 +22,9 @@ namespace IdentityServerApp.Identity
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
-                new IdentityResources.Address()
+                new IdentityResources.Address(),
+                new IdentityResource("roles", "User Roles", new string[]{ "role" }),
+                new IdentityResource("groups", "User Groups", new string[]{ "group" })
             };
 
         public static IEnumerable<ApiResource> ApiResources =>
@@ -63,7 +65,7 @@ namespace IdentityServerApp.Identity
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
                         IdentityServerConstants.StandardScopes.Address,
-                        "weatherapi.read", "weatherapi.write"
+                        "weatherapi.read", "weatherapi.write", "roles", "groups"
                     },
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = 

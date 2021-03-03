@@ -13,6 +13,15 @@
     }
 </dl>
 
+@if (User.IsInRole("Admin"))
+{
+    <p>Is Admin</p>
+}
+else
+{
+    <p>Not Admin</p>
+}
+
 <h2>Properties</h2>
 <dl>
     @foreach (var Prop in (await Context.AuthenticateAsync()).Properties.Items)
