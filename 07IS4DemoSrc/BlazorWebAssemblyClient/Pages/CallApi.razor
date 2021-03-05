@@ -1,0 +1,57 @@
+﻿@page "/callapi"
+@attribute [Authorize]
+@inject IAccessTokenProvider AccessTokenProvider
+@using System.Text.Json
+<pre>
+@ApiResult
+</pre>
+@code {
+    string ApiResult = "";
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Intentar obtener el token de acceso
+            var AccessTokenResult =
+            await AccessTokenProvider.RequestAccessToken();
+            // Determinar si la solicitud se realizó correctamente e
+            // intentar obtener el Token.
+            if (AccessTokenResult.TryGetToken(out var Token))
+            {
+                // Establecer al token en el encabezado de autorización
+                var HttpClient = new HttpClient();
+                HttpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer", Token.Value);
+                // Realizar el llamado a la API
+                var Response =
+                await HttpClient.GetAsync(
+                "https://localhost:44301/identity");
+                if (Response.IsSuccessStatusCode)
+                {
+                    // Obtener el resultado devuelto por la API
+                    var JsonElement =
+                    await Response.Content
+                    .ReadFromJsonAsync<JsonElement>();
+                    // Formatear el resultado
+                    ApiResult = JsonSerializer.Serialize(JsonElement,
+                    new System.Text.Json.JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                    });
+                }
+                else
+                {
+                    // No se pudo obtener el resultado.
+                    ApiResult =
+                    $"{(int)Response.StatusCode} {Response.ReasonPhrase}";
+                }
+            }
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            // No se pudo obtener el token de acceso.
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
