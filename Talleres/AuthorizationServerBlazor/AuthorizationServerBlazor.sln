@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServerBlazor.Server", "AuthorizationServerBlazor\Server\AuthorizationServerBlazor.Server.csproj", "{D22DD0D1-2D0B-48E1-8683-C0F75FE56914}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServerBlazor.Server", "AuthorizationServerBlazor\Server\AuthorizationServerBlazor.Server.csproj", "{D22DD0D1-2D0B-48E1-8683-C0F75FE56914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServerBlazor.Client", "AuthorizationServerBlazor\Client\AuthorizationServerBlazor.Client.csproj", "{0A223DDB-CF85-4FDE-9A67-454A998F95F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServerBlazor.Client", "AuthorizationServerBlazor\Client\AuthorizationServerBlazor.Client.csproj", "{0A223DDB-CF85-4FDE-9A67-454A998F95F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServerBlazor.Shared", "AuthorizationServerBlazor\Shared\AuthorizationServerBlazor.Shared.csproj", "{468D4DC5-ADB6-4C80-BF2C-7A1763F47E23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServerBlazor.Shared", "AuthorizationServerBlazor\Shared\AuthorizationServerBlazor.Shared.csproj", "{468D4DC5-ADB6-4C80-BF2C-7A1763F47E23}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B694A6C2-5AF1-41D6-8335-BA7869749A5B}"
 	ProjectSection(SolutionItems) = preProject
-		MigracionesPasos.txt = MigracionesPasos.txt
+		IS4MigracionesInfo.txt = IS4MigracionesInfo.txt
 	EndProjectSection
 EndProject
 Global
