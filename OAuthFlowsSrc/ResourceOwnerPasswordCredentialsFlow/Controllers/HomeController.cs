@@ -32,16 +32,27 @@ namespace ResourceOwnerPasswordCredentialsFlow.Controllers
             string Client_Secret = Configuration["OAuth:Client_Secret"];
             string Scope = Configuration["OAuth:Scope"];
 
-            Dictionary<string, string> BodyData =
-                new Dictionary<string, string>
-                {
-                    { "grant_type", Grant_Type },
-                    { "client_id", Client_Id},
-                    { "client_secret", Client_Secret},
-                    { "scope", Scope},
-                    { "username", userName},
-                    { "password", password}
-                };
+            Dictionary<string, string> BodyData = new Dictionary<string, string>
+            {
+                { "grant_type", Grant_Type },
+                { "client_id", Client_Id},
+                { "client_secret", Client_Secret},
+                { "scope", Scope },
+                { "username", userName},
+                { "password", password}
+            };
+
+            //Dictionary<string, string> BodyData = new Dictionary<string, string>
+            //{
+            //    { "grant_type", Grant_Type },
+            //    { "client_id", Client_Id},
+            //    { "client_secret", Client_Secret},
+            //    { "scope", Scope + " openid profile"},
+            //    { "username", userName},
+            //    { "password", password},
+            //    { "response_type", "token id_token"}
+            //};
+
 
             HttpClient HttpClient = new HttpClient();
             var Body = new FormUrlEncodedContent(BodyData);
