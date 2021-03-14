@@ -15,6 +15,11 @@ namespace ResourceOwnerPasswordCredentialsFlow.Controllers
 {
     public class HomeController : Controller
     {
+        //User para probar
+        //chris@scoacourse2021.onmicrosoft.com
+        //El#P4$$the
+
+
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration Configuration;
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration)

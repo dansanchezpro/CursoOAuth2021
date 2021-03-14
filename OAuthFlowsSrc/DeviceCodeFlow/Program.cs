@@ -11,9 +11,9 @@ namespace DeviceCodeFlow
 {
     class Program
     {
-        const string DeviceCode_Endpoint = "https://login.microsoftonline.com/620af200-d1ef-40af-a3d8-3c79dee81f3d/oauth2/v2.0/devicecode";
-        const string Token_Endpoint = "https://login.microsoftonline.com/620af200-d1ef-40af-a3d8-3c79dee81f3d/oauth2/v2.0/token";
-        const string Client_Id = "9e87f0cb-7989-4c4b-a1f5-2b4bbf9105a9";
+        const string DeviceCode_Endpoint = "https://login.microsoftonline.com/4af37db3-dbda-4248-a06b-936cb5c492be/oauth2/v2.0/devicecode";
+        const string Token_Endpoint = "https://login.microsoftonline.com/4af37db3-dbda-4248-a06b-936cb5c492be/oauth2/v2.0/token";
+        const string Client_Id = "aeeb68d4-9e62-4c1a-b089-6020eaba2ad7";
         const string Scope = "https://graph.microsoft.com/User.Read";
         const string Api_Endpoint = "https://graph.microsoft.com/v1.0/me";
         static void Main(string[] args)
